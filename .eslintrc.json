@@ -33,11 +33,11 @@
         "eslint-plugin-import-helpers"
     ],
     "rules": {
-        // "indent": ["warn", 2],
-        "quotes": [
-            "error",
-            "single"
-        ],
+				"quotes": "off",
+        // "quotes": [
+        //     "error",
+        //     "single"
+        // ],
         "semi": [
             "error",
             "never"
@@ -61,6 +61,11 @@
                     "ignoreCase": true
                 }
             }
-        ]
+        ],
+				"@typescript-eslint/quotes": [
+					2, "single", {
+						"avoisEscape": true
+					}
+				]
     }
 }
