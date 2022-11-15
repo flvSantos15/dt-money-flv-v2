@@ -33,11 +33,10 @@
         "eslint-plugin-import-helpers"
     ],
     "rules": {
-				"quotes": "off",
-        // "quotes": [
-        //     "error",
-        //     "single"
-        // ],
+        "quotes": [
+            "error",
+            "single"
+        ],
         "semi": [
             "error",
             "never"
