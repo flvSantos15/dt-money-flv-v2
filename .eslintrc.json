@@ -41,10 +41,8 @@
             "error",
             "never"
         ],
-        "no-duplicate-imports": [
-            "warn",
-            "never"
-        ],
+        "no-duplicate-imports": "off",
+				"@typescript-eslint/no-duplicate-imports": "warn",
         "react/react-in-jsx-scope": "off",
         "import-helpers/order-imports": [
             "warn",
@@ -53,18 +51,14 @@
                 "groups": [
                     "/^react/",
                     "module",
-                    ["parent", "sibling", "index"]
+                    ["parent", "sibling", "index"],
+										"styles"
                 ],
                 "alphabetize": {
                     "order": "asc",
                     "ignoreCase": true
                 }
             }
-        ],
-				"@typescript-eslint/quotes": [
-					2, "single", {
-						"avoisEscape": true
-					}
-				]
+        ]
     }
 }
