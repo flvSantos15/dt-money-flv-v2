@@ -5,11 +5,6 @@ import { NewTransactionModal } from "../NewTransactionModal";
 import { HeaderContainer, HeaderContent, NewTransactionButton } from "./styles";
 
 export function Header() {
-	const example = [
-		{ id: "1", title: "test1" },
-		{ id: "1", title: "test1" },
-		{ id: "1", title: "test1" },
-	];
 	return (
 		<HeaderContainer>
 			<HeaderContent>
