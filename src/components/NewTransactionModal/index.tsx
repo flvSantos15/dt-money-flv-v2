@@ -13,6 +13,8 @@ import {
 	TransactionTypeButton,
 } from './styles'
 
+import { useTransactions } from '../../contexts/TransactionsContext'
+
 const newTransactionFormSchema = z.object({
 	description: z.string(),
 	price: z.number(),
@@ -20,21 +22,31 @@ const newTransactionFormSchema = z.object({
 	type: z.enum(['income', 'outcome'])
 })
 
-type NewTransactionsFormInputs = z.infer<typeof newTransactionFormSchema>
+export type NewTransactionsFormInputs = z.infer<typeof newTransactionFormSchema>
 
 export function NewTransactionModal() {
+	const { createTransaction } = useTransactions()
+
 	const {
 		control,
 		register,
 		handleSubmit,
+		reset,
 		formState: { isSubmitting },
 	} = useForm<NewTransactionsFormInputs>({
 		resolver: zodResolver(newTransactionFormSchema)
 	})
 
 	async function handleCreateNewtransaction(data: NewTransactionsFormInputs) {
-		await new Promise(resolve => setTimeout(resolve, 2000))
-		console.log(data)
+		try {
+			const { description, category, price, type } = data
+
+			createTransaction({ description, category, price, type })
+		} catch (err) {
+			console.log(err, 'error no NewTransactionModal')
+		} finally {
+			reset()
+		}
 	}
 
 
@@ -44,7 +56,9 @@ export function NewTransactionModal() {
 				<Content>
 					<Dialog.Title>Nova Transação</Dialog.Title>
 
-					<CloseButton className="transaction-close-button">
+					<CloseButton
+						className="transaction-close-button"
+					>
 						<X size={24} />
 					</CloseButton>
 

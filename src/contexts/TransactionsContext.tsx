@@ -1,4 +1,11 @@
-import { createContext, useContext, ReactNode, useEffect, useState, useMemo } from 'react'
+import {
+	createContext,
+	useContext,
+	ReactNode,
+	useEffect,
+	useState,
+	useMemo
+} from 'react'
 
 import { api } from '../lib/axios'
 
@@ -11,10 +18,17 @@ export interface ITransactions {
 	createdAt: string
 }
 
+interface CreateTransactionInput {
+	description: string
+	category: string
+	price: number
+	type: 'income' | 'outcome'
+}
 
 interface TransactionContextData {
 	transactions: ITransactions[]
 	fetchTransactions: (query?: string) => void
+	createTransaction: (value: CreateTransactionInput) => void
 }
 
 interface TransactionProviderProps {
@@ -29,11 +43,36 @@ export function TransactionsProvider({ children }: TransactionProviderProps) {
 	async function fetchTransactions(query?: string) {
 		const { data } = await api.get('/transactions', {
 			params: {
+				_sort: 'createdAt',
+				_order: 'desc',
 				q: query
 			}
 		})
 
 		setTransactions(data)
+	}
+
+	async function createTransaction({
+		description,
+		category,
+		price,
+		type
+	}: CreateTransactionInput) {
+		const { data } = await api.post('/transactions', {
+			description,
+			category,
+			price,
+			type,
+			createdAt: new Date()
+		})
+
+		if (transactions?.length) {
+			setTransactions((state) => {
+				return [data, ...state]
+			})
+		} else {
+			setTransactions(data)
+		}
 	}
 
 	useEffect(() => {
@@ -42,8 +81,13 @@ export function TransactionsProvider({ children }: TransactionProviderProps) {
 
 	const contextValues = useMemo(() => ({
 		transactions,
-		fetchTransactions
-	}), [transactions, fetchTransactions])
+		fetchTransactions,
+		createTransaction
+	}), [
+		transactions,
+		fetchTransactions,
+		createTransaction
+	])
 
 	return (
 		<TransactionsContext.Provider value={contextValues}>
