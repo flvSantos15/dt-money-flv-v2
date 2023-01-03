@@ -1,5 +1,6 @@
 /* eslint-disable import-helpers/order-imports */
 import { ThemeProvider } from 'styled-components'
+import { TransactionsProvider } from './contexts/TransactionsContext'
 
 import { Transactions } from './pages/Transactions'
 
@@ -11,7 +12,9 @@ export function App() {
 		<ThemeProvider theme={defaultTheme}>
 			<GlobalStyle />
 
-			<Transactions />
+			<TransactionsProvider>
+				<Transactions />
+			</TransactionsProvider>
 		</ThemeProvider>
 	)
 }

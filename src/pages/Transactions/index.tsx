@@ -1,33 +1,13 @@
-import { useEffect, useState } from 'react'
-
 import { Header } from '../../components/Header'
 import { Summary } from '../../components/Summary'
+import { useTransactions } from '../../contexts/TransactionsContext'
 import { SearchForm } from './components/SeachForm'
 
 // eslint-disable-next-line import-helpers/order-imports
 import { PriceHighlight, TransactionsContainer, TransactionsTable } from './styles'
 
-interface ITransactions {
-	id: number
-	description: string
-	type: 'income' | 'outcome'
-	category: string
-	price: number
-	createdAt: string
-}
-
 export function Transactions() {
-	const [transactions, setTransactions] = useState<ITransactions[]>([])
-	async function handleLoadTransactions() {
-		const response = await fetch('http://localhost:3333/transactions')
-		const data = await response.json()
-
-		setTransactions(data)
-	}
-
-	useEffect(() => {
-		handleLoadTransactions()
-	}, [])
+	const { transactions } = useTransactions()
 	return (
 		<div>
 			<Header />
