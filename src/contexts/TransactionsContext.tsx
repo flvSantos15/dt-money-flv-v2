@@ -1,4 +1,6 @@
-import { createContext, useContext, ReactNode, useEffect, useState } from 'react'
+import { createContext, useContext, ReactNode, useEffect, useState, useMemo } from 'react'
+
+import { api } from '../lib/axios'
 
 export interface ITransactions {
 	id: number
@@ -12,6 +14,7 @@ export interface ITransactions {
 
 interface TransactionContextData {
 	transactions: ITransactions[]
+	fetchTransactions: (query?: string) => void
 }
 
 interface TransactionProviderProps {
@@ -23,18 +26,27 @@ const TransactionsContext = createContext({} as TransactionContextData)
 export function TransactionsProvider({ children }: TransactionProviderProps) {
 	const [transactions, setTransactions] = useState<ITransactions[]>([])
 
-	async function handleLoadTransactions() {
-		const response = await fetch('http://localhost:3333/transactions')
-		const data = await response.json()
+	async function fetchTransactions(query?: string) {
+		const { data } = await api.get('/transactions', {
+			params: {
+				q: query
+			}
+		})
 
 		setTransactions(data)
 	}
 
 	useEffect(() => {
-		handleLoadTransactions()
+		fetchTransactions()
 	}, [])
+
+	const contextValues = useMemo(() => ({
+		transactions,
+		fetchTransactions
+	}), [transactions, fetchTransactions])
+
 	return (
-		<TransactionsContext.Provider value={{ transactions }}>
+		<TransactionsContext.Provider value={contextValues}>
 			{children}
 		</TransactionsContext.Provider>
 	)
