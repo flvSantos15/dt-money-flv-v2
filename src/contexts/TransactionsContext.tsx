@@ -1,11 +1,12 @@
 import {
-	createContext,
-	useContext,
 	ReactNode,
 	useEffect,
 	useState,
-	useMemo
+	useMemo,
+	useCallback
 } from 'react'
+
+import { createContext } from 'use-context-selector'
 
 import { api } from '../lib/axios'
 
@@ -35,49 +36,55 @@ interface TransactionProviderProps {
 	children: ReactNode
 }
 
-const TransactionsContext = createContext({} as TransactionContextData)
+export const TransactionsContext = createContext({} as TransactionContextData)
 
 export function TransactionsProvider({ children }: TransactionProviderProps) {
 	const [transactions, setTransactions] = useState<ITransactions[]>([])
 
-	async function fetchTransactions(query?: string) {
-		const { data } = await api.get('/transactions', {
-			params: {
-				_sort: 'createdAt',
-				_order: 'desc',
-				q: query
-			}
-		})
+	const fetchTransactions = useCallback(
+		async (query?: string) => {
+			const { data } = await api.get('/transactions', {
+				params: {
+					_sort: 'createdAt',
+					_order: 'desc',
+					q: query
+				}
+			})
 
-		setTransactions(data)
-	}
+			setTransactions(data)
+		},
+		[]
+	)
 
-	async function createTransaction({
-		description,
-		category,
-		price,
-		type
-	}: CreateTransactionInput) {
-		const { data } = await api.post('/transactions', {
+	const createTransaction = useCallback(
+		async ({
 			description,
 			category,
 			price,
-			type,
-			createdAt: new Date()
-		})
-
-		if (transactions?.length) {
-			setTransactions((state) => {
-				return [data, ...state]
+			type
+		}: CreateTransactionInput) => {
+			const { data } = await api.post('/transactions', {
+				description,
+				category,
+				price,
+				type,
+				createdAt: new Date()
 			})
-		} else {
-			setTransactions(data)
-		}
-	}
+
+			if (transactions?.length) {
+				setTransactions((state) => {
+					return [data, ...state]
+				})
+			} else {
+				setTransactions(data)
+			}
+		},
+		[]
+	)
 
 	useEffect(() => {
 		fetchTransactions()
-	}, [])
+	}, [fetchTransactions])
 
 	const contextValues = useMemo(() => ({
 		transactions,
@@ -96,8 +103,3 @@ export function TransactionsProvider({ children }: TransactionProviderProps) {
 	)
 }
 
-export const useTransactions = () => {
-	const context = useContext(TransactionsContext)
-
-	return context
-}

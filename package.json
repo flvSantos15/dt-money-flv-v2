@@ -7,8 +7,8 @@
     "dev": "vite",
     "build": "tsc && vite build",
     "preview": "vite preview",
-		"lint": "eslint src --ext .tsx,.ts",
-		"lint:fix": "eslint src --ext .tsx,.ts --fix",
+    "lint": "eslint src --ext .tsx,.ts",
+    "lint:fix": "eslint src --ext .tsx,.ts --fix",
     "commit": "cz",
     "cypress:open": "cypress open",
     "server": "json-server server.json -p 3333 -w -d 500"
@@ -23,7 +23,9 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-hook-form": "^7.41.3",
+    "scheduler": "^0.23.0",
     "styled-components": "^5.3.6",
+    "use-context-selector": "^1.4.1",
     "zod": "^3.20.2"
   },
   "devDependencies": {
