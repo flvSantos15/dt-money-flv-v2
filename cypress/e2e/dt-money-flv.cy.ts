@@ -17,9 +17,6 @@ describe('dt-money-flv', () => {
 	it('should close the transaction modal', () => {
 		cy.contains('Cadastrar').wait(5000)
 		cy.get('.transaction-close-button').click()
-	})
-
-	it('should the transaction modal be closed', () => {
 		cy.get('.transaction-close-button').should('not.exist').wait(5000)
 	})
 })
